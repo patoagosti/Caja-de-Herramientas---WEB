@@ -2,7 +2,7 @@ import streamlit as st
 from yt_dlp import YoutubeDL
 import os
 
-st.set_page_config(page_title="Caja de Herramientas de Pato", layout="wide")
+st.set_page_config(page_title="Caja de Herramientas", layout="wide")
 st.title("Caja de Herramientas de Pato")
 
 st.sidebar.title("Categorías")
