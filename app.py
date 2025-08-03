@@ -22,7 +22,7 @@ if opcion == "Conversores":
         if link:
             ydl_opts = {
                 'format': 'best',
-                'outtmpl': 'video_descargado.%(ext)s'
+                'outtmpl': 'video_descargado.%(ext)s'  # Nombre fijo para el archivo
             }
             try:
                 with YoutubeDL(ydl_opts) as ydl:
@@ -30,20 +30,6 @@ if opcion == "Conversores":
                     filename = ydl.prepare_filename(info)
 
                 st.success(f"Descarga completada ✅ ({info['title']})")
-                import os
-
-# Código de descarga (ya lo tenés)
-# ...
-
-# Luego de descargar:
-with open(stream.default_filename, "rb") as file:
-    btn = st.download_button(
-        label="Descargar a mi PC",
-        data=file,
-        file_name=stream.default_filename,
-        mime="video/mp4"
-    )
-
 
                 # BOTÓN DE DESCARGA AL NAVEGADOR
                 with open(filename, "rb") as file:
