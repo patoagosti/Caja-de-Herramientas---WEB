@@ -1,8 +1,9 @@
 import streamlit as st
 from yt_dlp import YoutubeDL
+import os
 
 st.set_page_config(page_title="Caja de Herramientas de Pato", layout="wide")
-st.title("🧰 Caja de Herramientas de Pato")
+st.title("Caja de Herramientas de Pato")
 
 st.sidebar.title("Categorías")
 opcion = st.sidebar.radio(
@@ -17,26 +18,46 @@ if opcion == "Conversores":
     st.subheader("📥 Descargar video de YouTube")
     link = st.text_input("Pegá el link de YouTube")
 
-    if link:
-        ydl_opts = {}
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(link, download=False)
-            formats = info.get('formats', [])
-            qualities = []
-            for f in formats:
-                if f.get('vcodec') != 'none' and f.get('acodec') != 'none' and f.get('ext') == 'mp4':
-                    qualities.append(f"{f['format_id']} - {f['height']}p")
-
-        calidad = st.selectbox("Seleccioná la calidad", qualities)
-
-        if st.button("Descargar video"):
-            st.write(f"Descargando en calidad: {calidad}")
+    if st.button("Descargar video"):
+        if link:
             ydl_opts = {
-                'format': calidad.split(' ')[0]
+                'format': 'best',
+                'outtmpl': 'video_descargado.%(ext)s'
             }
-            with YoutubeDL(ydl_opts) as ydl:
-                ydl.download([link])
-            st.success("Descarga completada ✅ (se guardó en la carpeta actual)")
+            try:
+                with YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(link, download=True)
+                    filename = ydl.prepare_filename(info)
+
+                st.success(f"Descarga completada ✅ ({info['title']})")
+                import os
+
+# Código de descarga (ya lo tenés)
+# ...
+
+# Luego de descargar:
+with open(stream.default_filename, "rb") as file:
+    btn = st.download_button(
+        label="Descargar a mi PC",
+        data=file,
+        file_name=stream.default_filename,
+        mime="video/mp4"
+    )
+
+
+                # BOTÓN DE DESCARGA AL NAVEGADOR
+                with open(filename, "rb") as file:
+                    st.download_button(
+                        label="📥 Descargar video a tu PC",
+                        data=file,
+                        file_name=os.path.basename(filename),
+                        mime="video/mp4"
+                    )
+
+            except Exception as e:
+                st.error(f"Ocurrió un error: {e}")
+        else:
+            st.warning("Pegá un link primero.")
 
 elif opcion == "Mensajes":
     st.header("💬 Armadores de Mensajes")
@@ -49,5 +70,3 @@ elif opcion == "Datos":
 elif opcion == "Automatizaciones":
     st.header("🤖 Automatizaciones")
     st.write("Acá vas a tener scripts que hagan tareas repetitivas por vos.")
-
-
